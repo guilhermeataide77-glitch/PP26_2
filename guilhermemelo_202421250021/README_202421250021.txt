@@ -1,0 +1,31 @@
+README_202421250021
+
+VERSÃO DO COMPILADOR JAVA:
+javac 21.0.12.1
+
+IDE:
+Visual Studio Code
+Versão: 1.135.0
+
+SISTEMA OPERACIONAL:
+Windows 10
+
+TIPO DA BIBLIOTECA:
+.jar
+
+CLASSE:
+Calculadora_202421250021
+
+DESCRIÇÃO DOS MÉTODOS:
+
+public double somar(double a, double b)
+Realiza a soma de dois números e retorna o resultado.
+
+public double subtrair(double a, double b)
+Realiza a subtração do segundo número pelo primeiro e retorna o resultado.
+
+public double multiplicar(double a, double b)
+Realiza a multiplicação de dois números e retorna o resultado.
+
+public double dividir(double a, double b)
+Realiza a divisão do primeiro número pelo segundo e retorna o resultado.
