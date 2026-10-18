@@ -1,0 +1,74 @@
+import java.util.ArrayList;
+import java.util.List;
+
+interface Mediator {
+    void sendMessage(String message, Colleague sender);
+    void addUser(Colleague colleague);
+}
+
+abstract class Colleague {
+    protected Mediator mediator;
+    protected String name;
+
+    public Colleague(Mediator mediator, String name) {
+        this.mediator = mediator;
+        this.name = name;
+    }
+
+    public abstract void send(String message);
+    public abstract void receive(String message);
+}
+
+class ChatRoom implements Mediator {
+    private List<Colleague> users = new ArrayList<>();
+
+    @Override
+    public void addUser(Colleague colleague) {
+        this.users.add(colleague);
+    }
+
+    @Override
+    public void sendMessage(String message, Colleague sender) {
+        for (Colleague user : users) {
+            if (user != sender) {
+                user.receive(message);
+            }
+        }
+    }
+}
+
+class ChatUser extends Colleague {
+    public ChatUser(Mediator mediator, String name) {
+        super(mediator, name);
+    }
+
+    @Override
+    public void send(String message) {
+        System.out.println("[" + this.name + "] enviou: " + message);
+        mediator.sendMessage(message, this);
+    }
+
+    @Override
+    public void receive(String message) {
+        System.out.println("[" + this.name + "] recebeu: " + message);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Mediator room = new ChatRoom();
+
+        Colleague rayane = new ChatUser(room, "Rayane");
+        Colleague duda = new ChatUser(room, "Duda");
+        Colleague paulo = new ChatUser(room, "Paulo");
+        Colleague guilherme = new ChatUser(room, "Guilherme");
+
+        room.addUser(rayane);
+        room.addUser(duda);
+        room.addUser(paulo);
+        room.addUser(guilherme);
+
+        rayane.send("Ola pessoal!");
+        duda.send("Oi, Rayane e galera!");
+    }
+}
