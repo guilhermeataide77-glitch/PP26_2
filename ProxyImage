@@ -1,0 +1,60 @@
+// Interface comum
+interface Imagem {
+    void exibir();
+}
+
+// Objeto Real (pesado de carregar)
+class ImagemReal implements Imagem {
+    private String arquivo;
+
+    public ImagemReal(String arquivo) {
+        this.arquivo = arquivo;
+        carregarDoDisco(); // Operação custosa/lenta
+    }
+
+    private void carregarDoDisco() {
+        System.out.println("Carregando " + arquivo + " da memória secundária...");
+    }
+
+    @Override
+    public void exibir() {
+        System.out.println("Exibindo imagem: " + arquivo);
+    }
+}
+
+// Proxy que controla o acesso e o momento de criação
+class ProxyImagem implements Imagem {
+    private String arquivo;
+    private ImagemReal imagemReal; // Referência adiada
+
+    public ProxyImagem(String arquivo) {
+        this.arquivo = arquivo;
+    }
+
+    @Override
+    public void exibir() {
+        // O objeto pesado só é instanciado na primeira vez que for realmente exibido
+        if (imagemReal == null) {
+            imagemReal = new ImagemReal(arquivo);
+        }
+        imagemReal.exibir();
+    }
+}
+
+// Uso no sistema:
+public class Main {
+    public static void main(String[] args) {
+        // Nenhuma imagem pesada foi carregada ainda, apenas o proxy leve
+        Imagem foto1 = new ProxyImagem("foto_alta_resolucao_1.png");
+        Imagem foto2 = new ProxyImagem("foto_alta_resolucao_2.png");
+        
+
+        System.out.println("Interface carregada com sucesso. O usuário ainda não viu a foto 1.");
+        
+        // Apenas agora, quando o usuário rola a tela até a foto 1, ela é carregada
+        foto1.exibir(); 
+        foto2.exibir();
+        foto1.exibir();
+        
+    }
+}
