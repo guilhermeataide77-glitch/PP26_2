@@ -1,0 +1,76 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+// Interface Flyweight
+interface Algarismos {
+    void operacao(int estadoMutavel);
+}
+
+// Concrete Flyweight (Algarismo Concreto)
+class AlgarismosConcreto implements Algarismos {
+    private final char valor; // Estado intrínseco (imutável)
+
+    public AlgarismosConcreto(char valor) {
+        this.valor = valor;
+    }
+
+    @Override
+    public void operacao(int estadoMutavel) {
+        // O estado extrínseco (ex: posição) é recebido como parâmetro
+        System.out.print(valor);
+    }
+}
+
+// Classe para gerenciar estados não compartilhados ou o contexto posicional
+class AlgarismosNCompartilhados {
+    private final int[] posicoes = new int[10];
+
+    public AlgarismosNCompartilhados() {
+        for (int i = 0; i < 10; i++) {
+            posicoes[i] = i; // Posições dos algarismos em 10 posições diferentes
+        }
+    }
+
+    public int getPosicao(int indice) {
+        return posicoes[indice];
+    }
+}
+
+// Flyweight Factory (Fábrica de Algarismos)
+class FabricaAlgarismos {
+    private final Map<Character, Algarismos> algarismos = new HashMap<>();
+
+    public Algarismos getAlgarismo(char valor) {
+        // Se o algarismo ainda não foi criado, crie e armazene. Senão, retorne o existente.
+        if (!algarismos.containsKey(valor)) {
+            algarismos.put(valor, new AlgarismosConcreto(valor));
+        }
+        return algarismos.get(valor);
+    }
+}
+
+// Aplicação Principal
+public class Main {
+    public static void main(String[] args) {
+        FabricaAlgarismos fabrica = new FabricaAlgarismos();
+        AlgarismosNCompartilhados contexto = new AlgarismosNCompartilhados();
+        Random random = new Random();
+
+        // Imprime 10 números de 10 algarismos cada
+        for (int i = 1; i <= 10; i++) {
+            System.out.print("Número " + i + ": ");
+            for (int j = 0; j < 10; j++) {
+                // Gera um dígito aleatório de '0' a '9'
+                char digito = (char) ('0' + random.nextInt(10));
+                
+                // Obtém a instância compartilhada da fábrica
+                Algarismos algarismo = fabrica.getAlgarismo(digito);
+                
+                // Executa a operação passando o estado extrínseco (posição)
+                algarismo.operacao(contexto.getPosicao(j));
+            }
+            System.out.println();
+        }
+    }
+}
