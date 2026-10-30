@@ -1,0 +1,59 @@
+// 1. Product (Interface do Produto)
+interface Transporte {
+    String entregar();
+}
+
+// 2. Concrete Products (Produtos Concretos)
+class Caminhao implements Transporte {
+    @Override
+    public String entregar() {
+        return "Entrega feita por terra em um caminhão.";
+    }
+}
+
+class Navio implements Transporte {
+    @Override
+    public String entregar() {
+        return "Entrega feita pelo mar em um navio.";
+    }
+}
+
+// 3. Creator (Fábrica Abstrata)
+abstract class Logistica {
+    // Factory Method abstrato que as subclasses devem implementar
+    public abstract Transporte criarTransporte();
+
+    public String planejarEntrega() {
+        // O código usa o Factory Method sem saber a classe exata instanciada
+        Transporte transporte = criarTransporte();
+        return "[Logística] " + transporte.entregar();
+    }
+}
+
+// 4. Concrete Creators (Fábricas Concretas)
+class LogisticaRodoviaria extends Logistica {
+    @Override
+    public Transporte criarTransporte() {
+        return new Caminhao();
+    }
+}
+
+class LogisticaMaritima extends Logistica {
+    @Override
+    public Transporte criarTransporte() {
+        return new Navio();
+    }
+}
+
+// --- Executando o Código ---
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("--- Logística Rodoviária ---");
+        Logistica servicoRodoviario = new LogisticaRodoviaria();
+        System.out.println(servicoRodoviario.planejarEntrega());
+
+        System.out.println("\n--- Logística Marítima ---");
+        Logistica servicoMaritimo = new LogisticaMaritima();
+        System.out.println(servicoMaritimo.planejarEntrega());
+    }
+}
