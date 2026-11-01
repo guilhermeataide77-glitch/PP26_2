@@ -1,0 +1,128 @@
+
+interface Construtor {
+    void construirFundacao();
+    void construirEstrutura();
+    void construirTelhado();
+}
+
+// Produto complexo
+class Construcao {
+    private String fundacao;
+    private String estrutura;
+    private String telhado;
+
+    public void setFundacao(String fundacao) {
+        this.fundacao = fundacao;
+    }
+
+    public void setEstrutura(String estrutura) {
+        this.estrutura = estrutura;
+    }
+
+    public void setTelhado(String telhado) {
+        this.telhado = telhado;
+    }
+
+    public void mostrar() {
+        System.out.println("\n--- RESULTADO DA CONSTRUCAO ---");
+        System.out.println("Fundacao: " + fundacao);
+        System.out.println("Estrutura: " + estrutura);
+        System.out.println("Telhado: " + telhado);
+    }
+}
+
+// Builder concreto: Predio
+class ConstrutorPredio implements Construtor {
+    private Construcao produto;
+
+    public ConstrutorPredio(Construcao produto) {
+        this.produto = produto;
+    }
+
+    public void construirFundacao() {
+        produto.setFundacao("Sapata profunda de predio");
+        System.out.println("ConstrutorPredio: construindo fundacao");
+    }
+
+    public void construirEstrutura() {
+        produto.setEstrutura("Estrutura de concreto armado");
+        System.out.println("ConstrutorPredio: construindo estrutura");
+    }
+
+    public void construirTelhado() {
+        produto.setTelhado("Laje de concreto");
+        System.out.println("ConstrutorPredio: construindo telhado");
+    }
+}
+
+// Builder concreto: Casa
+class ConstrutorCasa implements Construtor {
+    private Construcao produto;
+
+    public ConstrutorCasa(Construcao produto) {
+        this.produto = produto;
+    }
+
+    public void construirFundacao() {
+        produto.setFundacao("Fundacao simples de casa");
+        System.out.println("ConstrutorCasa: construindo fundacao");
+    }
+
+    public void construirEstrutura() {
+        produto.setEstrutura("Estrutura de alvenaria");
+        System.out.println("ConstrutorCasa: construindo estrutura");
+    }
+
+    public void construirTelhado() {
+        produto.setTelhado("Telhado de ceramica");
+        System.out.println("ConstrutorCasa: construindo telhado");
+    }
+}
+
+// Diretor
+class Diretor {
+
+    public void construir(Construcao produto,
+                          Construtor construtorFundacao,
+                          Construtor construtorEstrutura,
+                          Construtor construtorTelhado) {
+
+        construtorFundacao.construirFundacao();
+
+        construtorEstrutura.construirEstrutura();
+
+        construtorTelhado.construirTelhado();
+
+    }
+}
+
+// Classe principal
+public class Main {
+
+    public static void main(String[] args) {
+
+        // Um unico produto compartilhado
+        Construcao produto = new Construcao();
+
+        // Dois builders diferentes
+        ConstrutorPredio predio =
+            new ConstrutorPredio(produto);
+
+        ConstrutorCasa casa =
+            new ConstrutorCasa(produto);
+
+        // Diretor
+        Diretor diretor = new Diretor();
+
+        // Misturando as etapas dos builders
+        diretor.construir(
+            produto,
+            predio, // Fundacao do predio
+            predio, // Estrutura do predio
+            casa    // Telhado da casa
+        );
+
+        // Exibindo o resultado
+        produto.mostrar();
+    }
+}
